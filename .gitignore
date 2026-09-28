@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local settings and secrets
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+*.crt
+*.cer
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+~$*
+
+# IDE/editor local state
+.vscode/
+.idea/
+
+# OS metadata
+Thumbs.db
+Desktop.ini

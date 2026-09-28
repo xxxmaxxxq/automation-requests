@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Учебная заявка Apex</title>
+  <style>
+    :root {
+      --bg: #e9eef4;
+      --panel: #ffffff;
+      --line: #c7d3df;
+      --line-strong: #8fb3d9;
+      --text: #17212f;
+      --muted: #66788a;
+      --blue: #1769aa;
+      --blue-dark: #0f426c;
+      --soft-blue: #eef7ff;
+      --warn-bg: #fff7dc;
+      --warn-line: #f1c75b;
+      --green: #16865a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.35 Arial, sans-serif;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 54px;
+      padding: 0 20px;
+      background: linear-gradient(180deg, #2e5f8e, #163d63);
+      color: #fff;
+      border-bottom: 1px solid #0c2f4f;
+      box-shadow: 0 2px 8px rgba(15, 35, 55, .28);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--blue-dark);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mode-pill {
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, .4);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .12);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .page {
+      width: min(1280px, calc(100vw - 32px));
+      margin: 16px auto 28px;
+    }
+
+    .notice {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--warn-line);
+      border-radius: 6px;
+      background: var(--warn-bg);
+      color: #6e5100;
+    }
+
+    .notice strong {
+      color: #3f3300;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 14px;
+      margin-top: 14px;
+      align-items: start;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .section + .section {
+      margin-top: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 12px;
+      background: linear-gradient(180deg, #f7fbff, #e3effa);
+      border-bottom: 1px solid var(--line-strong);
+      color: #0f4f86;
+      font-weight: 700;
+    }
+
+    .section-title span {
+      color: #d02626;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 190px minmax(260px, 1fr);
+      gap: 8px 12px;
+      padding: 12px;
+      align-items: center;
+    }
+
+    label {
+      color: #23384f;
+      font-weight: 700;
+    }
+
+    input, textarea, button {
+      font: inherit;
+    }
+
+    input, textarea {
+      width: 100%;
+      min-height: 28px;
+      padding: 5px 8px;
+      border: 1px solid #b8c9d9;
+      border-radius: 4px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus, textarea:focus, .select-button:focus {
+      border-color: #338bd0;
+      box-shadow: 0 0 0 2px rgba(51, 139, 208, .16);
+    }
+
+    textarea {
+      min-height: 54px;
+      resize: vertical;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .check-panel {
+      display: grid;
+      gap: 7px;
+      padding: 12px;
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 7px 8px;
+      border: 1px solid #d5e1ed;
+      border-radius: 5px;
+      background: #fbfdff;
+    }
+
+    .check-row input {
+      width: 16px;
+      min-height: 16px;
+      margin-top: 1px;
+    }
+
+    .check-row label {
+      font-weight: 600;
+      color: #24364a;
+    }
+
+    .select-widget {
+      position: relative;
+    }
+
+    .select-button {
+      width: 100%;
+      min-height: 28px;
+      padding: 5px 28px 5px 8px;
+      border: 1px solid #b8c9d9;
+      border-radius: 4px;
+      background: #fff;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .select-button::after {
+      content: "▾";
+      position: absolute;
+      right: 10px;
+      color: var(--blue);
+    }
+
+    .select-container {
+      display: none;
+      position: absolute;
+      z-index: 20;
+      top: 31px;
+      left: 0;
+      right: 0;
+      border: 1px solid #9eb8d0;
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(31, 55, 82, .18);
+    }
+
+    .select-container.open {
+      display: block;
+    }
+
+    .option {
+      padding: 7px 9px;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: var(--soft-blue);
+    }
+
+    .side {
+      position: sticky;
+      top: 12px;
+    }
+
+    .summary {
+      padding: 12px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 7px 0;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .summary-row:last-child {
+      border-bottom: 0;
+    }
+
+    .summary-row b {
+      color: #27394d;
+    }
+
+    .summary-row span {
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid #e1e8f0;
+      background: #f8fafc;
+    }
+
+    .fake-save, .ghost-button {
+      min-height: 32px;
+      padding: 7px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .fake-save {
+      border: 1px solid #0d5f9d;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .ghost-button {
+      border: 1px solid #b9c7d5;
+      background: #fff;
+      color: #2f4358;
+    }
+
+    .local-note {
+      padding: 10px 12px;
+      border-top: 1px solid #e1e8f0;
+      color: var(--green);
+      font-weight: 700;
+      background: #f4fbf7;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .notice {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <h1>Учебная заявка на осмотр</h1>
+    </div>
+    <div class="mode-pill">Локальный тренажер, без отправки</div>
+  </header>
+
+  <main class="page">
+    <div class="notice">
+      <div><strong>Учебный режим.</strong> Эта страница открыта с компьютера и не создает настоящие заявки.</div>
+      <div>Можно спокойно тренироваться и проверять автозаполнение.</div>
+    </div>
+
+    <form id="training-form">
+      <div class="layout">
+        <div>
+          <section class="section">
+            <div class="section-title">Основные данные <span>*</span></div>
+            <div class="form-grid">
+              <label for="subject">Тема</label>
+              <textarea id="subject" name="subject" placeholder="Например: KIA QLE SPORTAGE A123BC777"></textarea>
+
+              <label for="email">Email для отправки файла</label>
+              <input id="email" type="text">
+
+              <label for="car.carNumber">Госномер ТС</label>
+              <input id="car.carNumber" type="text">
+
+              <label for="car.vin">VIN</label>
+              <input id="car.vin" type="text">
+
+              <label for="carBrand">Марка</label>
+              <input id="carBrand" type="text">
+
+              <label for="carModel">Модель</label>
+              <input id="carModel" type="text">
+
+              <label for="car.year">Год выпуска</label>
+              <input id="car.year" type="text">
+
+              <label for="car.stsPts">СТС/ПТС</label>
+              <input id="car.stsPts" type="text">
+
+              <label for="car.person.name">Собственник</label>
+              <input id="car.person.name" type="text">
+
+              <label for="address">Адрес</label>
+              <input id="address" type="text">
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-title">Данные участника</div>
+            <div class="form-grid">
+              <label for="car2.policyNumber">№ полиса участника</label>
+              <input id="car2.policyNumber" type="text">
+
+              <label for="car2.carNumber">Госномер участника</label>
+              <input id="car2.carNumber" type="text">
+
+              <label>Страховая участника</label>
+              <div class="select-widget">
+                <button id="car2.person.insurance_button" class="select-button" type="button">*</button>
+                <div id="car2.person.insurance_container" class="select-container">
+                  <div class="option">*****</div>
+                  <div class="option">Учебная страховая</div>
+                </div>
+              </div>
+
+              <label>Марка участника</label>
+              <div class="select-widget">
+                <button id="car2Brand_button" class="select-button" type="button">*</button>
+                <div id="car2Brand_container" class="select-container">
+                  <div class="option">*</div>
+                  <div class="option">KIA</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="side">
+          <section class="section">
+            <div class="section-title">Шаг 1. Выполняемые работы <span>*</span></div>
+            <div class="check-panel">
+              <div class="check-row">
+                <input id="not-office" type="checkbox">
+                <label for="not-office">Акт осмотра не в офисе АС</label>
+              </div>
+
+              <div class="check-row">
+                <input id="express" type="checkbox">
+                <label for="express">Экспресс-расчет калькуляции</label>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-title">Контроль заполнения</div>
+            <div class="summary">
+              <div class="summary-row"><b>Сайт</b><span>локальный файл</span></div>
+              <div class="summary-row"><b>Заявка</b><span>не создается</span></div>
+              <div class="summary-row"><b>Интернет</b><span>не используется</span></div>
+              <div class="summary-row"><b>Скрипт</b><span>заполняет поля как на Apex</span></div>
+            </div>
+            <div class="actions">
+              <button class="fake-save" type="button">Проверить заполнение</button>
+              <button class="ghost-button" type="reset">Очистить</button>
+            </div>
+            <div class="local-note">Безопасно: отправки в Apex нет.</div>
+          </section>
+        </aside>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    document.querySelectorAll('.select-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const container = button.parentElement.querySelector('.select-container');
+        container.classList.toggle('open');
+      });
+    });
+
+    document.querySelectorAll('.option').forEach((option) => {
+      option.addEventListener('click', () => {
+        const widget = option.closest('.select-widget');
+        widget.querySelector('.select-button').textContent = option.textContent;
+        widget.querySelector('.select-container').classList.remove('open');
+      });
+    });
+
+    document.querySelector('.fake-save').addEventListener('click', () => {
+      const subject = document.querySelector('#subject').value || 'тема не заполнена';
+      alert('Учебная проверка пройдена. Настоящая заявка не создана.\n\nТема: ' + subject);
+    });
+  </script>
+</body>
+</html>
